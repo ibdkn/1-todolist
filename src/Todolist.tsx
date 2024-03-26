@@ -12,15 +12,16 @@ type PropsType = {
 }
 
 export const Todolist = ({ title, tasks }: PropsType) => {
+
     return (
-        <div>
+        <div className="Todolist">
             <h3>{title}</h3>
             <div>
                 <input/>
                 <button>+</button>
             </div>
             {tasks.length === 0 ? (
-                <p>Тасок нет</p>
+                <p>No tasks</p>
             ) : (
                 <ul>
                     {tasks.map(task => {
