@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button} from "./Button";
 
-export type TaskType = {
+type TaskType = {
     id: number,
     title: string,
     isDone: boolean
@@ -13,7 +13,23 @@ type PropsType = {
     removeTask: (taskId: number) => void
 }
 
+type FilterValuesType = 'all' | 'active' | 'completed'
+
 export const Todolist = ({ title, tasks, removeTask }: PropsType) => {
+
+    const [filter, setFilter] = useState<FilterValuesType>("all");
+    const filterTasks = (allTasks: TaskType[], nextFilterValue: FilterValuesType) => {
+        switch (nextFilterValue) {
+            case "active":
+                return allTasks.filter(task => task.isDone === false);
+            case "completed":
+                return allTasks.filter(task => task.isDone === true);
+            default:
+                return allTasks;
+        }
+    }
+
+    const filteredTasks = filterTasks(tasks, filter);
 
     return (
         <div className="Todolist">
@@ -22,11 +38,11 @@ export const Todolist = ({ title, tasks, removeTask }: PropsType) => {
                 <input/>
                 <Button title={"+"}/>
             </div>
-            {tasks.length === 0 ? (
+            {filteredTasks.length === 0 ? (
                 <p>No tasks</p>
             ) : (
                 <ul>
-                    {tasks.map(task => {
+                    {filteredTasks.map(task => {
                         return (
                             <li key={task.id}>
                                 <input type="checkbox" checked={task.isDone} />
@@ -38,9 +54,9 @@ export const Todolist = ({ title, tasks, removeTask }: PropsType) => {
                 </ul>
             )}
             <div>
-                <Button title={"All"}/>
-                <Button title={"Active"}/>
-                <Button title={"Completed"}/>
+                <Button title={"All"} onClick={()=>setFilter("all")}/>
+                <Button title={"Active"} onClick={()=>setFilter("active")}/>
+                <Button title={"Completed"} onClick={()=>setFilter("completed")}/>
             </div>
         </div>
     );
