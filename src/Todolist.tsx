@@ -10,9 +10,10 @@ export type TaskType = {
 type PropsType = {
     title: string,
     tasks: TaskType[]
+    removeTask: (taskId: number) => void
 }
 
-export const Todolist = ({ title, tasks }: PropsType) => {
+export const Todolist = ({ title, tasks, removeTask }: PropsType) => {
 
     return (
         <div className="Todolist">
@@ -30,6 +31,7 @@ export const Todolist = ({ title, tasks }: PropsType) => {
                             <li key={task.id}>
                                 <input type="checkbox" checked={task.isDone} />
                                 <span>{task.title}</span>
+                                <Button title={'x'} onClick={()=> removeTask(task.id)} />
                             </li>
                         )
                     })}
