@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, useState, KeyboardEvent} from 'react';
 import {Button} from "./Button";
 
-type TaskType = {
-    id: number,
+export type TaskType = {
+    id: string,
     title: string,
     isDone: boolean
 }
@@ -10,14 +10,17 @@ type TaskType = {
 type PropsType = {
     title: string,
     tasks: TaskType[]
-    removeTask: (taskId: number) => void
+    removeTask: (taskId: string) => void
+    addTask: (title: string) => void
 }
 
 type FilterValuesType = 'all' | 'active' | 'completed'
 
-export const Todolist = ({ title, tasks, removeTask }: PropsType) => {
+export const Todolist = ({ title, tasks, removeTask, addTask }: PropsType) => {
 
     const [filter, setFilter] = useState<FilterValuesType>("all");
+
+    const [taskTitle, setTaskTitle] = useState("");
     const filterTasks = (allTasks: TaskType[], nextFilterValue: FilterValuesType) => {
         switch (nextFilterValue) {
             case "active":
@@ -31,12 +34,27 @@ export const Todolist = ({ title, tasks, removeTask }: PropsType) => {
 
     const filteredTasks = filterTasks(tasks, filter);
 
+    const onChangeSetTaskTitle = (event: ChangeEvent<HTMLInputElement>) => {
+        setTaskTitle(event.currentTarget.value);
+    }
+
+    const onClickAddTaskHandler = () => {
+        addTask(taskTitle);
+        setTaskTitle("");
+    }
+
+    const onKeyDownAddTaskHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        if(event.key === 'Enter') {
+            onClickAddTaskHandler();
+        }
+    }
+
     return (
         <div className="Todolist">
             <h3>{title}</h3>
-            <div>
-                <input/>
-                <Button title={"+"}/>
+            <div className="Controls">
+                <input value={taskTitle} onChange={onChangeSetTaskTitle} onKeyDown={onKeyDownAddTaskHandler}/>
+                <Button title={"+"} onClick={onClickAddTaskHandler}/>
             </div>
             {filteredTasks.length === 0 ? (
                 <p>No tasks</p>
@@ -53,7 +71,7 @@ export const Todolist = ({ title, tasks, removeTask }: PropsType) => {
                     })}
                 </ul>
             )}
-            <div>
+            <div className="Filters">
                 <Button title={"All"} onClick={()=>setFilter("all")}/>
                 <Button title={"Active"} onClick={()=>setFilter("active")}/>
                 <Button title={"Completed"} onClick={()=>setFilter("completed")}/>
