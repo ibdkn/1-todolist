@@ -34,6 +34,10 @@ export const Todolist = ({ title, tasks, removeTask, addTask }: PropsType) => {
 
     const filteredTasks = filterTasks(tasks, filter);
 
+    const MAX_LENGTH_TITLE = 20;
+
+    const titleIsLong = taskTitle.length > MAX_LENGTH_TITLE;
+
     const onChangeSetTaskTitle = (event: ChangeEvent<HTMLInputElement>) => {
         setTaskTitle(event.currentTarget.value);
     }
@@ -53,8 +57,10 @@ export const Todolist = ({ title, tasks, removeTask, addTask }: PropsType) => {
         <div className="Todolist">
             <h3>{title}</h3>
             <div className="Controls">
-                <input value={taskTitle} onChange={onChangeSetTaskTitle} onKeyDown={onKeyDownAddTaskHandler}/>
-                <Button title={"+"} onClick={onClickAddTaskHandler}/>
+                <input value={taskTitle} onChange={onChangeSetTaskTitle} onKeyDown={onKeyDownAddTaskHandler}
+                />
+                <Button title={"+"} onClick={onClickAddTaskHandler} disabled={!taskTitle || titleIsLong}/>
+                {titleIsLong ? <p className="input-error">The task title can't be longer than {MAX_LENGTH_TITLE} letters</p>  : ""}
             </div>
             {filteredTasks.length === 0 ? (
                 <p>No tasks</p>
