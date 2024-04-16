@@ -113,16 +113,12 @@ button {
         gap: 5px;
 
         button {
-            padding: 10px 20px;
+            padding: 10px 15px;
             color: #fff;
             border: none;
-            background-color: #0B8CE9;
+            background-color: #c2c2c2;
 
-            &:nth-child(2) {
-                background-color: #DC3545;
-            }
-
-            &:nth-child(3) {
+            &.active {
                 background-color: #198754;
             }
         }
