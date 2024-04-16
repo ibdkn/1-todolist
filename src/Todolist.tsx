@@ -84,18 +84,20 @@ export const Todolist = ({ title, tasks, removeTask, addTask, changeTaskStatus }
 
                         return (
                             <li key={task.id}>
-                                <input type="checkbox" checked={task.isDone} onChange={onChangeTaskStatusHandler}/>
-                                <span>{task.title}</span>
-                                <Button title={'x'} onClick={()=> removeTask(task.id)} />
+                                <label>
+                                    <input type="checkbox" checked={task.isDone} onChange={onChangeTaskStatusHandler}/>
+                                    <span>{task.title}</span>
+                                </label>
+                                <Button title={'x'} onClick={() => removeTask(task.id)}/>
                             </li>
                         )
                     })}
                 </ul>
             )}
             <div className="Filters">
-                <Button title={"All"} onClick={()=>setFilter("all")}/>
-                <Button title={"Active"} onClick={()=>setFilter("active")}/>
-                <Button title={"Completed"} onClick={()=>setFilter("completed")}/>
+                <Button className={filter === 'all' ? 'active' : ''} title={"All"} onClick={()=>setFilter("all")}/>
+                <Button className={filter === 'active' ? 'active' : ''} title={"Active"} onClick={()=>setFilter("active")}/>
+                <Button className={filter === 'completed' ? 'active' : ''} title={"Completed"} onClick={()=>setFilter("completed")}/>
             </div>
         </div>
     );
