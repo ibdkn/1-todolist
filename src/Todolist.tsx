@@ -50,15 +50,15 @@ export const Todolist = ({ title, tasks, removeTask, addTask, changeTaskStatus }
         const trimmedTaskTitle = taskTitle.trim();
         if(trimmedTaskTitle) {
             addTask(trimmedTaskTitle);
-            setTaskTitle("");
         } else {
             setTaskErrorInput("Title is required!")
         }
-
+        setTaskTitle("");
     }
 
     const onKeyDownAddTaskHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        if(event.key === 'Enter') {
+        setTaskErrorInput("");
+        if(event.key === 'Enter' && !titleIsLong) {
             onClickAddTaskHandler();
         }
     }
@@ -70,9 +70,9 @@ export const Todolist = ({ title, tasks, removeTask, addTask, changeTaskStatus }
                 <input value={taskTitle} className={taskErrorInput ? 'error' : ''}
                        onChange={onChangeSetTaskTitle} onKeyDown={onKeyDownAddTaskHandler}/>
                 <Button title={"+"} onClick={onClickAddTaskHandler} disabled={!taskTitle || titleIsLong}/>
+                {titleIsLong ? <p className="input-error">The task title can't be longer than {MAX_LENGTH_TITLE} letters</p>  : ""}
+                {taskErrorInput && <p className="input-error">{taskErrorInput}</p>}
             </div>
-            {titleIsLong ? <p className="input-error">The task title can't be longer than {MAX_LENGTH_TITLE} letters</p>  : ""}
-            {taskErrorInput && <p className="input-error">{taskErrorInput}</p>}
             {filteredTasks.length === 0 ? (
                 <p>No tasks</p>
             ) : (
