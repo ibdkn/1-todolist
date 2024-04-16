@@ -12,15 +12,19 @@ type PropsType = {
     tasks: TaskType[]
     removeTask: (taskId: string) => void
     addTask: (title: string) => void
+    changeTaskStatus: (taskId: string, newIsDone: boolean) => void
 }
 
 type FilterValuesType = 'all' | 'active' | 'completed'
 
-export const Todolist = ({ title, tasks, removeTask, addTask }: PropsType) => {
+export const Todolist = ({ title, tasks, removeTask, addTask, changeTaskStatus }: PropsType) => {
 
     const [filter, setFilter] = useState<FilterValuesType>("all");
 
     const [taskTitle, setTaskTitle] = useState("");
+
+    const [taskErrorInput, setTaskErrorInput] = useState<string | null>(null);
+
     const filterTasks = (allTasks: TaskType[], nextFilterValue: FilterValuesType) => {
         switch (nextFilterValue) {
             case "active":
@@ -43,8 +47,14 @@ export const Todolist = ({ title, tasks, removeTask, addTask }: PropsType) => {
     }
 
     const onClickAddTaskHandler = () => {
-        addTask(taskTitle);
-        setTaskTitle("");
+        const trimmedTaskTitle = taskTitle.trim();
+        if(trimmedTaskTitle) {
+            addTask(trimmedTaskTitle);
+            setTaskTitle("");
+        } else {
+            setTaskErrorInput("Title is required!")
+        }
+
     }
 
     const onKeyDownAddTaskHandler = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -57,19 +67,24 @@ export const Todolist = ({ title, tasks, removeTask, addTask }: PropsType) => {
         <div className="Todolist">
             <h3>{title}</h3>
             <div className="Controls">
-                <input value={taskTitle} onChange={onChangeSetTaskTitle} onKeyDown={onKeyDownAddTaskHandler}
-                />
+                <input value={taskTitle} className={taskErrorInput ? 'error' : ''}
+                       onChange={onChangeSetTaskTitle} onKeyDown={onKeyDownAddTaskHandler}/>
                 <Button title={"+"} onClick={onClickAddTaskHandler} disabled={!taskTitle || titleIsLong}/>
-                {titleIsLong ? <p className="input-error">The task title can't be longer than {MAX_LENGTH_TITLE} letters</p>  : ""}
             </div>
+            {titleIsLong ? <p className="input-error">The task title can't be longer than {MAX_LENGTH_TITLE} letters</p>  : ""}
+            {taskErrorInput && <p className="input-error">{taskErrorInput}</p>}
             {filteredTasks.length === 0 ? (
                 <p>No tasks</p>
             ) : (
                 <ul>
                     {filteredTasks.map(task => {
+                        const onChangeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => {
+                            changeTaskStatus(task.id, event.currentTarget.checked);
+                        }
+
                         return (
                             <li key={task.id}>
-                                <input type="checkbox" checked={task.isDone} />
+                                <input type="checkbox" checked={task.isDone} onChange={onChangeTaskStatusHandler}/>
                                 <span>{task.title}</span>
                                 <Button title={'x'} onClick={()=> removeTask(task.id)} />
                             </li>
