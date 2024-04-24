@@ -54,6 +54,10 @@ button {
         margin-bottom: 10px;
 
         li {
+            input {
+                cursor: pointer;
+            }
+
             &, label {
                 display: flex;
                 align-items: center;
@@ -128,6 +132,7 @@ button {
             color: #fff;
             border: none;
             background-color: #c2c2c2;
+            opacity: 1;
 
             &.active {
                 background-color: #0b8ce9;
