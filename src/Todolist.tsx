@@ -87,7 +87,7 @@ export const Todolist = ({ todolistID, title, tasks, filter, removeTask, addTask
 
                         return (
                             <li key={task.id}>
-                                <label>
+                                <label className={task.isDone ? 'done' : ''}>
                                     <input type="checkbox" checked={task.isDone} onChange={onChangeTaskStatusHandler}/>
                                     <span>{task.title}</span>
                                 </label>
